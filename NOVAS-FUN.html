@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Tarefas Personalizado</title>
+    <link rel="stylesheet" href="main.css">
+    <style>
+        /* Estilo para o container do formulário */
+        
+       
+        .container {
+            background-color: #ce80e2b9;
+            padding: 15px;
+            padding-top: 2px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            margin: 0 auto; /* Centraliza o container na página */
+            max-width: 320px; /* Define a largura máxima da janela */
+            border: 3px solid black; 
+        }
+
+        /* Estilo para os títulos */
+        h2 {
+            background-color: #b53be6f3;
+            color: rgb(0, 0, 0);
+            padding: 15px;
+            border-radius: 10px 10px 0 0;
+            border: 2px solid black; 
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        /* Estilo para as estrelas de dificuldade */
+        .star {
+            color: gray;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .star.active {
+            color: rgba(255, 217, 0, 0.979);
+        }
+
+        /* Estilo para a lista de tarefas */
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            margin-bottom: 10px;
+            cursor: pointer;
+        }
+
+        /* Estilo para a caixa de seleção */
+        .taskCompleted {
+            transform: scale(1.5);
+        }
+
+        /* risco das tarefas concluídas */
+        .completedTask {
+            text-decoration: line-through;
+        }
+
+        /* Estilo para os detalhes da tarefa */
+        .taskDetails {
+            display: none;
+            margin-top: 10px;
+            padding: 10px;
+            border: 1px solid rgb(0, 102, 255);
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            margin: 0 auto; /* Centraliza o container na página */
+            
+
+        }
+
+        /* Estilo para o fundo da página (roxo) */
+        body {
+            background-image: url('background.jpeg'); /* Substitua 'background.jpg' pelo caminho e nome do seu arquivo de imagem */
+            background-size: cover; /* Isso garante que a imagem cubra toda a tela */
+            background-repeat: no-repeat;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Nome da Tarefa</h2>
+        <form>
+            <input type="text" id="taskName" required><br>
+            <h2>Descrição da Tarefa</h2>
+            <textarea id="taskDescription" required></textarea><br>
+            <h2>Data de Prazo</h2>
+            <input type="date" id="taskDeadline" required><br>
+            <h2>Nível de Dificuldade</h2>
+            <div>
+                <span class="star" onclick="setDifficulty(1)">★</span>
+                <span class="star" onclick="setDifficulty(2)">★</span>
+                <span class="star" onclick="setDifficulty(3)">★</span>
+                <span class="star" onclick="setDifficulty(4)">★</span>
+                <span class="star" onclick="setDifficulty(5)">★</span>,
+            </div><br>
+            <h2>Barra de Tarefas</h2>
+            <ul id="taskList">
+            </ul>
+            <button type="button" onclick="addTask()">Adicionar Tarefa</button>
+        </form>
+    </div>
+    <script>
+        function setDifficulty(difficulty) {
+            const stars = document.querySelectorAll(".star");
+            stars.forEach(star => star.classList.remove("active"));
+            for (let i = 0; i < difficulty; i++) {
+                stars[i].classList.add("active");
+            }
+        }
+
+        function addTask() {
+            const taskName = document.getElementById("taskName").value;
+            const taskDescription = document.getElementById("taskDescription").value;
+            const taskDeadline = document.getElementById("taskDeadline").value;
+            const stars = document.querySelectorAll(".star.active");
+            const taskDifficulty = stars.length;
+
+            const taskItem = document.createElement("li");
+            taskItem.innerHTML = `<span class="taskTitle" onclick="toggleTaskDetails(this)">${taskName}</span>
+                                  <input type="checkbox" class="taskCompleted" onchange="markTaskCompleted(this)">
+                                  <button onclick="editTask(this)">Editar</button>
+                                  <button onclick="deleteTask(this)">Excluir</button>
+                                  <div class="taskDetails">
+                                      <p><strong>Nome:</strong> ${taskName}</p>
+                                      <p><strong>Descrição:</strong> ${taskDescription}</p>
+                                      <p><strong>Prazo:</strong> ${taskDeadline}</p>
+                                      <p><strong>Dificuldade:</strong> ${taskDifficulty}★</p>
+                                  </div>`;
+            taskItem.classList.add("taskItem");
+            taskItem.dataset.detailsVisible = "false";
+
+            document.getElementById("taskList").appendChild(taskItem);
+
+            // Limpar campos após adicionar tarefa
+            document.getElementById("taskName").value = "";
+            document.getElementById("taskDescription").value = "";
+            document.getElementById("taskDeadline").value = "";
+            setDifficulty(0); // Reseta as estrelas de dificuldade
+        }
+
+        function markTaskCompleted(checkbox) {
+            const taskItem = checkbox.parentNode;
+            if (checkbox.checked) {
+                taskItem.classList.add("completedTask");
+            } else {
+                taskItem.classList.remove("completedTask");
+            }  
+        }
+
+        function toggleTaskDetails(span) {
+            const taskItem = span.parentNode;
+            const detailsVisible = taskItem.dataset.detailsVisible === "true";
+            if (!detailsVisible) {
+                taskItem.querySelector(".taskDetails").style.display = "block";
+                taskItem.dataset.detailsVisible = "true";
+            } else {
+                taskItem.querySelector(".taskDetails").style.display = "none";
+                taskItem.dataset.detailsVisible = "false";
+            }
+        }
+
+        function editTask(button) {
+            const taskItem = button.parentNode;
+            const taskTitle = taskItem.querySelector(".taskTitle");
+            const taskDetails = taskItem.querySelector(".taskDetails");
+            const taskName = taskDetails.querySelector("p strong:contains('Nome:')").nextSibling.nodeValue;
+            const taskDescription = taskDetails.querySelector("p strong:contains('Descrição:')").nextSibling.nodeValue;
+            const taskDeadline = taskDetails.querySelector("p strong:contains('Prazo:')").nextSibling.nodeValue;
+            const taskDifficulty = taskDetails.querySelector("p strong:contains('Dificuldade:')").nextSibling.nodeValue;
+
+            // Preencha o formulário com os detalhes da tarefa
+            document.getElementById("taskName").value = taskName;
+            document.getElementById("taskDescription").value = taskDescription;
+            document.getElementById("taskDeadline").value = taskDeadline;
+
+            // Define a dificuldade da tarefa
+            setDifficulty(parseInt(taskDifficulty));
+
+            // Exclua a tarefa antiga
+            taskItem.remove();
+        }
+
+        function deleteTask(button) {
+            const taskItem = button.parentNode;
+            taskItem.remove();
+        }
+    </script>
+</body>
+</html>

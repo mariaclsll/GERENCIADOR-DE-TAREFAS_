@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+        /* Estilo para o container do formulário */
+        .container {
+            background-color: #ce80e2c2;
+            padding: 65px; /* Reduzindo o padding */
+            padding-bottom: 86px; /* Ajustando o padding inferior separadamente */
+            border-radius: 10px; /* Arredondando todos os cantos */
+            margin-bottom: 10px;
+            margin-top: 1px;
+            margin: 0 auto; /* Centraliza o container na página */
+            max-width: 900px; /* Aumentando o tamanho do container para 400 pixels */
+            border: 3px solid black; 
+            text-align: center; /* Alinha o conteúdo ao centro */
+        }
+
+        /* Estilo para os títulos */
+        h2 {
+            background-color: #b53be6f3;
+            color: rgb(0, 0, 0);
+            padding: 15px;
+            border-radius: 10px 10px 0 0; /* Arredondando apenas a borda superior */
+            border: 2px solid black; 
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
+
+        /* Estilo para os campos de entrada */
+        input[type="text"],
+        input[type="password"] {
+            width: 80%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Estilo para o botão */
+        button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #b53be6f3;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Estilo para o fundo da página (roxo) */
+        body {
+            background-image: url('background.jpeg'); /* Substitua 'background.jpg' pelo caminho e nome do seu arquivo de imagem */
+            background-size: cover; /* Isso garante que a imagem cubra toda a tela */
+            background-repeat: no-repeat;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Para ocupar toda a altura da tela */
+            margin: 0; /* Remove margens */
+            font-family: Arial, sans-serif; /* Define a fonte */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Login</h2>
+        <form>
+            <input type="text" placeholder="Nome de usuário" required><br>
+            <input type="password" placeholder="Senha" required><br>
+            <button type="submit">Entrar</button>
+        </form>
+    </div>
+</body>
+</html>

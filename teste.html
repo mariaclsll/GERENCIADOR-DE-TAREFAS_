@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciador de Tarefas Personalizado</title>
+    <style>
+        /* Estilo para o container do formulário */
+        .container {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 0 auto; /* Centraliza o container na página */
+            max-width: 400px; /* Define a largura máxima da janela */
+        }
+
+        /* Estilo para os títulos */
+        h2 {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
+        }
+
+        /* Estilo para o fundo da página */
+        body {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #e6e6ff; /* Fundo de roxo pastel */
+            border-radius: 20px; /* Borda arredondada */
+            padding: 20px;
+        }
+
+        /* Estilo para a barra de tarefas minimizada */
+        .taskListHeader {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .taskListHeader:hover {
+            background-color: #45a049;
+        }
+
+        /* Estilo para a lista de tarefas */
+        .taskList {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Nome da Tarefa</h2>
+        <form>
+            <input type="text" id="taskName" required><br>
+            <h2>Descrição da Tarefa</h2>
+            <textarea id="taskDescription" required></textarea><br>
+            <h2>Data de Prazo</h2>
+            <input type="date" id="taskDeadline" required><br>
+            <h2>Nível de Dificuldade</h2>
+            <div>
+                <span class="star" onclick="setDifficulty(1)">★</span>
+                <span class="star" onclick="setDifficulty(2)">★</span>
+                <span class="star" onclick="setDifficulty(3)">★</span>
+                <span class="star" onclick="setDifficulty(4)">★</span>
+                <span class="star" onclick="setDifficulty(5)">★</span>
+            </div><br>
+        </form>
+    </div>
+
+    <button type="button" onclick="addTask()">Adicionar Tarefa</button>
+
+    <h2 class="taskListHeader" onclick="toggleTaskList()">Barra de Tarefas</h2>
+    <ul class="taskList" id="taskList">
+        <!-- Conteúdo da lista de tarefas -->
+    </ul>
+
+    <script>
+        function setDifficulty(difficulty) {
+            const stars = document.querySelectorAll(".star");
+            stars.forEach(star => star.classList.remove("active"));
+            for (let i = 0; i < difficulty; i++) {
+                stars[i].classList.add("active");
+            }
+        }
+
+        function addTask() {
+            const taskName = document.getElementById("taskName").value;
+            const taskDescription = document.getElementById("taskDescription").value;
+            const taskDeadline = document.getElementById("taskDeadline").value;
+            const stars = document.querySelectorAll(".star.active");
+            const taskDifficulty = stars.length;
+
+            const taskItem = document.createElement("li");
+            taskItem.innerHTML = `<span class="taskTitle" onclick="toggleTaskDetails(this)">${taskName}</span>
+                                  <input type="checkbox" class="taskCompleted" onchange="markTaskCompleted(this)">
+                                  <div class="taskDetails">
+                                      <p><strong>Nome:</strong> ${taskName}</p>
+                                      <p><strong>Descrição:</strong> ${taskDescription}</p>
+                                      <p><strong>Prazo:</strong> ${taskDeadline}</p>
+                                      <p><strong>Dificuldade:</strong> ${taskDifficulty}★</p>
+                                  </div>`;
+            taskItem.classList.add("taskItem");
+            taskItem.dataset.detailsVisible = "false";
+
+            document.getElementById("taskList").appendChild(taskItem);
+
+            // Limpar campos após adicionar tarefa
+            document.getElementById("taskName").value = "";
+            document.getElementById("taskDescription").value = "";
+            document.getElementById("taskDeadline").value = "";
+            setDifficulty(0); // Reseta as estrelas de dificuldade
+        }
+
+        function markTaskCompleted(checkbox) {
+            const taskItem = checkbox.parentNode;
+            if (checkbox.checked) {
+                taskItem.classList.add("completedTask");
+            } else {
+                taskItem.classList.remove("completedTask");
+            }
+        }
+
+        function toggleTaskDetails(span) {
+            const taskItem = span.parentNode;
+            const detailsVisible = taskItem.dataset.detailsVisible === "true";
+            if (!detailsVisible) {
+                taskItem.querySelector(".taskDetails").style.display = "block";
+                taskItem.dataset.detailsVisible = "true";
+            } else {
+                taskItem.querySelector(".taskDetails").style.display = "none";
+                taskItem.dataset.detailsVisible = "false";
+            }
+        }
+
+        function toggleTaskList() {
+            const taskList = document.querySelector(".taskList");
+            if (taskList.style.display === "none" || taskList.style.display === "") {
+                taskList.style.display = "block";
+            } else {
+                taskList.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
